@@ -2,13 +2,26 @@ import curses
 import time, json
 
  # Screen Funtions #
+def all_view(stdscr):
+    y, x = stdscr.getmaxyx()
 
-def todo_view(stdscr):
-    data = load(0)
+    todo_win = curses.newwin(100, 50, 50, 50)
+    # done_win = curses.newwin(curses.LINES, curses.COLS)
 
-    for i in range(0, len(data)):
-        stdscr.addstr(f" [ - ]: {data[i]}\n")   
+    todo_win.border()
+    # done_win.border()
 
+    todos = load(0)
+    done = load(1)
+
+    for i in range(0, len(todos)):
+        todo_win.addstr(f"[ - ]: {todos[i]}\n")
+
+    # for i in range(0, len(done)):
+        # done_win.addstr(f"[ X ]: {done[i]}\n")
+    stdscr.border() 
+    todo_win.refresh()
+    # done_win.refresh()
 
 
 # \\ MAIN FUNCTION // #
@@ -20,7 +33,8 @@ def main(stdscr):
         stdscr.clear()
         stdscr.refresh()
 
-        todo_view(stdscr)   
+        all_view(stdscr)
+        stdscr.refresh()
 
         key = stdscr.getkey()
 
@@ -60,5 +74,4 @@ def load(mode):
 
 
 
-if __name__ == "__main__":
-    curses.wrapper(main)
+if __name__ == "__main__":    curses.wrapper(main)
