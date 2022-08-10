@@ -1,103 +1,78 @@
 import curses
-import time, json
 
+menu = []
 
-TODOS = []
+# PRINT
+def print_todo(stdscr, menu, selected_idx):
+    stdscr.clear()
+    h, w = stdscr.getmaxyx()
 
-# Screen Funtions #
-def all_view(stdscr):
+    for idx, row in enumerate(menu):
+        x = w // 2 - len(row) // 2
+        y = h // 2 - len(menu) + idx
+
+        if idx == selected_idx:
+            stdscr.attron(curses.color_pair(1))
+            stdscr.addstr(y, x, row)
+            stdscr.attroff(curses.color_pair(1))
+        else:
+            stdscr.addstr(y, x, row)
+    
+    stdscr.border()
     stdscr.refresh()
-    y, x = stdscr.getmaxyx()
 
-    todos = []
-
-    if len(TODOS) < 1:
-        todos = load(0)
-    else:
-        todos = TODOS
-    
-    height = int(len(todos) * 4)
-    to_y = y // 25
-    to_x = x // 50
-
-
-    win = curses.newwin(height, 50, to_y, to_x)
-    win.clear()
- 
-    for i in range(0, len(todos)):
-        TODOS.append(todos[i])
-        win.addstr(f" [ - ]: {todos[i]}\n")
-    
-    win.border()
-    win.refresh()
-    del win
-
+# ADD
 def add_todo(stdscr):
-    y, x = stdscr.getmaxyx()
-
-    to_y = y // 10
-    to_x = x // 10
-
-    win = curses.newwin(50, 100, to_y, to_x)
-    win.erase()
+    h, w = stdscr.getmaxyx()
     
+    x = (w // 2) - 30
+    y = (h // 2) - 5
+
     curses.echo(True)
-    win.addstr(1, 2, "Input todo: ")
-    
-    inpt = win.getstr(2, 2, 2000)
 
+    win = curses.newwin(10, 60, y, x)
+    win.refresh()
+    
+    
     win.border()
     win.refresh()
+    
+    win.addstr(2, 2, "Add a todo: ")
+    win.refresh()
+    inp = win.getstr(4, 2, 2000)
 
     curses.echo(False)
-    return inpt
 
-# \\ MAIN FUNCTION // #
+    return str(inp)
+
+
 def main(stdscr):
-   
-    stdscr = curses.initscr()
+    curses.curs_set(0)
+    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     
+    curr_row = 0
+
     while True:
+
         stdscr.clear()
-        stdscr.refresh()
-    
 
-        all_view(stdscr)
-        stdscr.refresh()
+        print_todo(stdscr, menu, curr_row)
+        stdscr.refresh() 
+        key = stdscr.getch()
+        
+        if key == curses.KEY_UP:
+            curr_row -= 1
+        elif key == curses.KEY_DOWN:
+            curr_row += 1
 
-        key = stdscr.getkey()
+        if curr_row < 0 or curr_row > len(menu) - 1: curr_row = 0
 
-        if key == 'q' or key == 'Q':
-            break
-        elif key == 'a' or key == 'A':
-            inp = str(add_todo(stdscr)).replace("b", "").replace("'", "")
-            TODOS.append(inp)
-        else:
-            continue
+        # Main functions #
+        if chr(key) == 'q' or chr(key) == 'Q': break
+        if chr(key) == 'a' or chr(key) == 'A': 
+            inp = str(add_todo(stdscr))
+            inp = inp[2:-1]
 
+            menu.append(inp)
 
-
-# JSON load and deload functions #
-def load(mode): 
-
-    if mode == 0:
-        with open("data.json", "r") as f:
-            data = json.load(f)
-            data = data["todos"]
-    else:
-         with open("data.json", "r") as f:
-            data = json.load(f)
-            data = data["done"]
-
-    return data
-
-
-
-
-
-
-
-
-
-
-if __name__ == "__main__":    curses.wrapper(main)
+curses.wrapper(main)
