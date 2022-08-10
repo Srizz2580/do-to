@@ -1,4 +1,5 @@
 import curses
+import json, time
 
 menu = []
 
@@ -38,18 +39,55 @@ def add_todo(stdscr):
     win.refresh()
     
     win.addstr(2, 2, "Add a todo: ")
+    
+    win.addstr(4, 2, ">>", curses.A_BOLD)
+    
     win.refresh()
-    inp = win.getstr(4, 2, 2000)
+    inp = win.getstr(4, 5, 2000)
 
     curses.echo(False)
 
     return str(inp)
 
+# DELETE
+def del_todo(stdscr, menu, selected_idx):
+    stdscr.refresh()
+    
+    for idx, row in enumerate(menu):
+        if idx == selected_idx:
+            menu.pop(idx)
+    
+    stdscr.refresh()
+    print_todo(stdscr, menu, 0)
+
+
+# SAVE
+def save_todo(stdscr):
+    stdscr.clear()
+    
+    h, w = stdscr.getmaxyx()
+    text = "Adding data to data.json ..."
+
+    x = w // 2 - len(text)
+    y = h // 2
+
+    stdscr.addstr(y, x, text, curses.A_BOLD)
+    stdscr.refresh()
+
+    time.sleep(2)
+
+    dictionary = {"todos": menu}
+
+    with open('./data.json', 'w') as f:
+        json.dump(dictionary, f)
+    
+    stdscr.clear()
+    print_todo(stdscr, menu, 0)
 
 def main(stdscr):
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
-    
+
     curr_row = 0
 
     while True:
@@ -74,5 +112,8 @@ def main(stdscr):
             inp = inp[2:-1]
 
             menu.append(inp)
+        
+        if chr(key) == 'd' or chr(key) == 'D': del_todo(stdscr, menu, curr_row)
+        if chr(key) == 's' or chr(key) == 'S': save_todo(stdscr)
 
 curses.wrapper(main)
