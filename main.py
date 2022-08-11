@@ -46,8 +46,8 @@ def add_todo(stdscr):
     inp = win.getstr(4, 5, 2000)
 
     curses.echo(False)
-
-    return str(inp)
+    if str(inp) == "b''": return
+    else: return inp
 
 # DELETE
 def del_todo(stdscr, menu, selected_idx):
@@ -68,7 +68,7 @@ def save_todo(stdscr):
     h, w = stdscr.getmaxyx()
     text = "Adding data to data.json ..."
 
-    x = w // 2 - len(text)
+    x = w // 2 - len(text) // 2
     y = h // 2
 
     stdscr.addstr(y, x, text, curses.A_BOLD)
@@ -93,7 +93,7 @@ def load_todo(stdscr):
     h, w = stdscr.getmaxyx()
     text = "Loading data from data.json ..."
 
-    x = w // 2 - len(text)
+    x = w // 2 - len(text) // 2
     y = h // 2
 
     stdscr.addstr(y, x, text, curses.A_BOLD)
@@ -135,7 +135,7 @@ def main(stdscr):
             inp = str(add_todo(stdscr))
             
             inp = inp[2:-1].strip()
-            menu.append(inp) 
+            if inp != "n": menu.append(inp) 
 
         if chr(key) == 'd' or chr(key) == 'D': del_todo(stdscr, menu, curr_row)
         if chr(key) == 's' or chr(key) == 'S': save_todo(stdscr)
