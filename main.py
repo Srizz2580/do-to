@@ -38,7 +38,7 @@ def add_todo(stdscr):
     win.border()
     win.refresh()
     
-    win.addstr(2, 2, "Add a todo: ")
+    win.addstr(2, 2, "Add a todo: ", curses.A_UNDERLINE)
     
     win.addstr(4, 2, ">>", curses.A_BOLD)
     
@@ -84,6 +84,30 @@ def save_todo(stdscr):
     stdscr.clear()
     print_todo(stdscr, menu, 0)
 
+# LOAD
+def load_todo(stdscr):
+    global menu
+
+    stdscr.clear()
+
+    h, w = stdscr.getmaxyx()
+    text = "Loading data from data.json ..."
+
+    x = w // 2 - len(text)
+    y = h // 2
+
+    stdscr.addstr(y, x, text, curses.A_BOLD)
+    stdscr.refresh()
+
+    time.sleep(2)
+    with open('./data.json', 'r') as f:
+        data = json.load(f)
+        
+    menu = data["todos"]
+
+
+
+# // MAIN // #
 def main(stdscr):
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
@@ -107,13 +131,14 @@ def main(stdscr):
 
         # Main functions #
         if chr(key) == 'q' or chr(key) == 'Q': break
-        if chr(key) == 'a' or chr(key) == 'A': 
+        if chr(key) == 'a' or chr(key) == 'A':
             inp = str(add_todo(stdscr))
-            inp = inp[2:-1]
+            
+            inp = inp[2:-1].strip()
+            menu.append(inp) 
 
-            menu.append(inp)
-        
         if chr(key) == 'd' or chr(key) == 'D': del_todo(stdscr, menu, curr_row)
         if chr(key) == 's' or chr(key) == 'S': save_todo(stdscr)
+        if chr(key) == 'l' or chr(key) == 'L': load_todo(stdscr)
 
 curses.wrapper(main)
