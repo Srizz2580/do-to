@@ -119,13 +119,12 @@ def main(stdscr):
         stdscr.clear()
 
         print_todo(stdscr, menu, curr_row)
-        stdscr.refresh() 
+        stdscr.refresh()
+
         key = stdscr.getch()
         
-        if key == curses.KEY_UP:
-            curr_row -= 1
-        elif key == curses.KEY_DOWN:
-            curr_row += 1
+        if key == curses.KEY_UP: curr_row -= 1
+        elif key == curses.KEY_DOWN: curr_row += 1
 
         if curr_row < 0 or curr_row > len(menu) - 1: curr_row = 0
 
