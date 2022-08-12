@@ -61,6 +61,7 @@ def del_todo(stdscr, menu, selected_idx):
     print_todo(stdscr, menu, 0)
 
 
+
 # SAVE
 def save_todo(stdscr):
     stdscr.clear()
