@@ -150,7 +150,6 @@ def edit_todo(stdscr, selected_row):
                 else: return
 
 
-
 # // MAIN // #
 def main(stdscr):
     curses.curs_set(0)
