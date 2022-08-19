@@ -154,6 +154,13 @@ def edit_todo(stdscr, selected_row):
 def main(stdscr):
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    
+    h, w = stdscr.getmaxyx()
+    text = "Press 'l' for help. Press 'Enter' to continue."
+    x = w // 2 - len(text) // 2
+    y = h // 2
+    stdscr.addstr(y, x, text)
+    stdscr.getch()
 
     curr_row = 0
 

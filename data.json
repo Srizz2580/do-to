@@ -1,1 +1,7 @@
-{"todos": ["You can use the 'a' key to add todos.", "You can use the 's' key to save todos.", "You can use the 'd' key to delete todos.", "You can use the 'l' key to load todos."]}
+{"todos": [
+	"Press 'l' to load data.",
+	"Press 'd' to delete data.",
+	"Press 'a' to add data.",
+	"Press 'e' to edit data.",
+	"Press 's' to save data."
+]}
