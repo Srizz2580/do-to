@@ -79,7 +79,7 @@ def save_todo(stdscr):
 
     dictionary = {"todos": menu}
 
-    with open('./data.json', 'w') as f:
+    with open('./data/data.json', 'w') as f:
         json.dump(dictionary, f)
     
     stdscr.clear()
@@ -101,7 +101,7 @@ def load_todo(stdscr):
     stdscr.refresh()
 
     time.sleep(2)
-    with open('./data.json', 'r') as f:
+    with open('./data/data.json', 'r') as f:
         data = json.load(f)
         
     menu = data["todos"]
@@ -159,8 +159,9 @@ def main(stdscr):
     text = "Press 'l' for help. Press 'Enter' to continue."
     x = w // 2 - len(text) // 2
     y = h // 2
-    stdscr.addstr(y, x, text)
-    stdscr.getch()
+    stdscr.addstr(y, x, text, curses.A_BOLD)
+    key = stdscr.getch()
+    if chr(key) == 'l' or chr(key) == 'L': load_todo(stdscr)
 
     curr_row = 0
 

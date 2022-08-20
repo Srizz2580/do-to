@@ -3,5 +3,6 @@
 	"Press 'd' to delete data.",
 	"Press 'a' to add data.",
 	"Press 'e' to edit data.",
-	"Press 's' to save data."
+	"Press 's' to save data.",
+	"Press 'q' to quit the program."
 ]}
