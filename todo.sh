@@ -1,2 +1,2 @@
 #!/bin/sh
-/bin/python ./data/main.py
+./pyenv/bin/python3 ./data/main.py
